@@ -11,6 +11,6 @@
         public double WorkingHours { get; set; } 
 
         // Navigation Properties
-        public Employee Employee { get; set; } // علاقة مع الموظف
+        public Employee Employee { get; set; } 
     }
 }
