@@ -59,5 +59,17 @@ namespace HR_Management.API.Repositories
             }
             return employee;
         }
+        public async Task<List<Employee>> SearchByName(string? name)
+        {
+            var employee = dbContext.Employees.AsQueryable();
+            if (string.IsNullOrWhiteSpace(name) == false)
+            {
+                
+                employee = employee.Where(x => x.Name.Contains(name));
+                
+            }
+            return await employee.ToListAsync();
+
+        }
     }
 }

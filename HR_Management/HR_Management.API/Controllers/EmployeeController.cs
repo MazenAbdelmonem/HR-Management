@@ -121,5 +121,25 @@ namespace HR_Management.API.Controllers
             };
             return Ok(employeeDto);
         }
+        [HttpGet]
+        [Route("Search")]
+        public async Task<IActionResult> SearchByName([FromQuery] string? name)
+        {
+            var employeesDomin = await employeeRepository.SearchByName(name);
+            List<EmployeeDto> employeesDto = new List<EmployeeDto>();
+            foreach(Employee employee in employeesDomin)
+            {
+                EmployeeDto employeeDto = new EmployeeDto()
+                {
+                    employeeId = employee.employeeId,
+                    Name = employee.Name,
+                    Department = employee.Department,
+                    Role = employee.Role,
+                    DateOfJoining = employee.DateOfJoining
+                };
+                employeesDto.Add(employeeDto);
+            }
+            return Ok(employeesDto);
+        }
     }
 }
