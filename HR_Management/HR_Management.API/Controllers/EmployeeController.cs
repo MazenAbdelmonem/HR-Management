@@ -77,5 +77,49 @@ namespace HR_Management.API.Controllers
 
             return Ok(employeeDto);
         }
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateEmployee([FromRoute] int id, [FromBody] UpdateEmployeeRequestDto updateEmployeeRequestDto)
+        {
+            Employee employeeDmoin = new Employee()
+            {
+                Name = updateEmployeeRequestDto.Name,
+                Department = updateEmployeeRequestDto.Department,
+                Role = updateEmployeeRequestDto.Role
+            };
+            employeeDmoin = await employeeRepository.UpdateEmployee(id, employeeDmoin);
+            if (employeeDmoin == null)
+            {
+                return BadRequest("Not found");
+            }
+            EmployeeDto employeeDto = new EmployeeDto()
+            {
+                employeeId = employeeDmoin.employeeId,
+                Name = employeeDmoin.Name,
+                Department = employeeDmoin.Department,
+                Role = employeeDmoin.Role,
+                DateOfJoining = employeeDmoin.DateOfJoining
+            };
+            return Ok(employeeDto);
+        }
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteEmployee([FromRoute] int id)
+        {
+            Employee employee = await employeeRepository.DeleteEmployee(id);
+            if (employee == null)
+            {
+                return BadRequest("Not Found.");
+            }
+            EmployeeDto employeeDto = new EmployeeDto()
+            {
+                employeeId = employee.employeeId,
+                Name = employee.Name,
+                Department = employee.Department,
+                Role = employee.Role,
+                DateOfJoining = employee.DateOfJoining
+            };
+            return Ok(employeeDto);
+        }
     }
 }
