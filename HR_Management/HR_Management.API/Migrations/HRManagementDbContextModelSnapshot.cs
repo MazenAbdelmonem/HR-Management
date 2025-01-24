@@ -150,7 +150,7 @@ namespace HR_Management.API.Migrations
             modelBuilder.Entity("HR_Management.API.Models.Domin.Attendance", b =>
                 {
                     b.HasOne("HR_Management.API.Models.Domin.Employee", "Employee")
-                        .WithMany("Attendances")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -161,13 +161,13 @@ namespace HR_Management.API.Migrations
             modelBuilder.Entity("HR_Management.API.Models.Domin.EmployeeRole", b =>
                 {
                     b.HasOne("HR_Management.API.Models.Domin.Employee", "Employee")
-                        .WithMany("EmployeeRoles")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HR_Management.API.Models.Domin.Role", "Role")
-                        .WithMany("EmployeeRoles")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -186,18 +186,6 @@ namespace HR_Management.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("HR_Management.API.Models.Domin.Employee", b =>
-                {
-                    b.Navigation("Attendances");
-
-                    b.Navigation("EmployeeRoles");
-                });
-
-            modelBuilder.Entity("HR_Management.API.Models.Domin.Role", b =>
-                {
-                    b.Navigation("EmployeeRoles");
                 });
 #pragma warning restore 612, 618
         }

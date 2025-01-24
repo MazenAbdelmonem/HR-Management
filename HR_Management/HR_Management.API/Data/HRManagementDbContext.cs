@@ -19,8 +19,6 @@ namespace HR_Management.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmployeeRole>().HasKey(er => new { er.EmployeeId  , er.RoleId });
-            modelBuilder.Entity<EmployeeRole>().HasOne(er => er.Employee).WithMany(e => e.EmployeeRoles).HasForeignKey(r=> r.EmployeeId);
-            modelBuilder.Entity<EmployeeRole>().HasOne(er=> er.Role).WithMany(e=> e.EmployeeRoles).HasForeignKey(r=>r.RoleId);
         }
 
     }
