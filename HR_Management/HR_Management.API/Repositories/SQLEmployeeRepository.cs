@@ -21,16 +21,16 @@ namespace HR_Management.API.Repositories
         }
         public async Task<Employee?> UpdateEmployee(int id, Employee employee)
         {
-            Employee existEmployee = await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == id);
-            if (existEmployee == null)
+            Employee existingEmployee = await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == id);
+            if (existingEmployee == null)
             {
                 return null;
             }
-            existEmployee.Name = employee.Name;
-            existEmployee.Department = employee.Department;
-            existEmployee.Role = employee.Role;
+            existingEmployee.Name = employee.Name;
+            existingEmployee.Department = employee.Department;
+            existingEmployee.Role = employee.Role;
             await dbContext.SaveChangesAsync();
-            return existEmployee;
+            return existingEmployee;
         }
 
         public async Task<Employee?> DeleteEmployee(int id)
