@@ -21,7 +21,7 @@ namespace HR_Management.API.Repositories
 
         public async Task<Attendance>? DeleteAttendanceAsync(int id)
         {
-            Attendance attendance = await dbContext.Attendances.FirstOrDefaultAsync(x => x.Id == id);
+            Attendance attendance = await dbContext.Attendances.Include(a => a.Employee).FirstOrDefaultAsync(x => x.Id == id);
             if (attendance == null)
             {
                 return attendance;

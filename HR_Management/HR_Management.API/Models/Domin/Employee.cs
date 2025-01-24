@@ -7,9 +7,5 @@
         public string Role { get; set; }   // Job Title
         public string Department { get; set; }  
         public DateTime DateOfJoining { get; set; }  //  Joining Date
-
-        // Navigation Properties
-        public ICollection<Attendance> Attendances { get; set; }
-        public  ICollection<EmployeeRole> EmployeeRoles { get; set; }
     }
 }

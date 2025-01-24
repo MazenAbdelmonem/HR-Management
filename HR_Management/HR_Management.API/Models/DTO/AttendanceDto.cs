@@ -1,4 +1,6 @@
-﻿namespace HR_Management.API.Models.DTO
+﻿using HR_Management.API.Models.Domin;
+
+namespace HR_Management.API.Models.DTO
 {
     public class AttendanceDto
     {
@@ -9,5 +11,6 @@
         public DateTime? CheckOutTime { get; set; } // Check out time
         public bool IsAbsent { get; set; }
         public double WorkingHours { get; set; }
+        public Employee Employee { get; set; }
     }
 }

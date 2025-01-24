@@ -3,7 +3,9 @@
     public class AddAttendanceRequestDto
     {
         public int EmployeeId { get; set; }
-        public DateTime Date { get; set; } // Date of attendance
+       /// <summary>
+       ///public DateTime Date { get; set; } // Date of attendance
+       /// </summary>
         public DateTime? CheckInTime { get; set; } // Entry time
         public DateTime? CheckOutTime { get; set; } // Check out time
         public bool IsAbsent { get; set; }
