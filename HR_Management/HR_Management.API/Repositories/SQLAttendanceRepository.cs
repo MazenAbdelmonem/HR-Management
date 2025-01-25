@@ -49,7 +49,7 @@ namespace HR_Management.API.Repositories
             Attendance existingattendance = await dbContext.Attendances.FirstOrDefaultAsync(x => x.Id == id);
             if (existingattendance == null)
             {
-                return attendance;
+                return existingattendance;
             }
             existingattendance.EmployeeId  = attendance.EmployeeId;
             existingattendance.WorkingHours = attendance.WorkingHours;
@@ -57,7 +57,7 @@ namespace HR_Management.API.Repositories
             existingattendance.CheckInTime = attendance.CheckInTime;
             existingattendance.CheckOutTime = attendance.CheckOutTime;
             await dbContext.SaveChangesAsync();
-            return attendance;
+            return existingattendance;
 
         }
     }

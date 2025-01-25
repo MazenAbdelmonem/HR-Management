@@ -1,9 +1,9 @@
 ﻿namespace HR_Management.API.Models.DTO
 {
-    public class AddAttendanceRequestDto
+    public class UpdateAttendanceReqeustDto
     {
         public int EmployeeId { get; set; }
-       ///public DateTime Date { get; set; } // Date of attendance
+        ///public DateTime Date { get; set; } // Date of attendance
         public DateTime? CheckInTime { get; set; } // Entry time
         public DateTime? CheckOutTime { get; set; } // Check out time
         public bool IsAbsent { get; set; }

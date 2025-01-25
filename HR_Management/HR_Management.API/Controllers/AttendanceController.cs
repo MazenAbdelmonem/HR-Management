@@ -3,7 +3,6 @@ using HR_Management.API.Models.DTO;
 using HR_Management.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 namespace HR_Management.API.Controllers
 {
     [Route("api/[controller]")]
@@ -20,6 +19,10 @@ namespace HR_Management.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatAttendance(AddAttendanceRequestDto addAttendanceRequestDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             Attendance attendanceDomin = new Attendance()
             {
                 IsAbsent = addAttendanceRequestDto.IsAbsent,
@@ -68,6 +71,78 @@ namespace HR_Management.API.Controllers
                 attendancesDto.Add(attendanceDto);
             }
             return Ok(attendancesDto);
+        }
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GitBiId(int id)
+        {
+            Attendance attendanceDomin = await attendanceRepository.GitByIdAsync(id);
+            if (attendanceDomin == null)
+            {
+                return BadRequest("Attendance record not found.");
+            }
+            AttendanceDto attendanceDto = new AttendanceDto()
+            {
+                Id = attendanceDomin.Id,
+                Date = attendanceDomin.Date,
+                Employee = attendanceDomin.Employee,
+                IsAbsent = attendanceDomin.IsAbsent,
+                WorkingHours = attendanceDomin.WorkingHours,
+                CheckInTime = attendanceDomin.CheckInTime,
+                CheckOutTime = attendanceDomin.CheckOutTime
+            };
+            return Ok(attendanceDto);
+        }
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateAttendance([FromRoute] int id, [FromBody] UpdateAttendanceReqeustDto updateAttendanceReqeustDto)
+        {
+            Attendance attendanceDomin = new Attendance()
+            {
+                EmployeeId = updateAttendanceReqeustDto.EmployeeId,
+                IsAbsent = updateAttendanceReqeustDto.IsAbsent,
+                WorkingHours = (double)updateAttendanceReqeustDto.WorkingHours,
+                CheckInTime = updateAttendanceReqeustDto.CheckInTime,
+                CheckOutTime = updateAttendanceReqeustDto.CheckOutTime,
+                Date = DateTime.UtcNow
+            };
+            attendanceDomin = await attendanceRepository.UpdateAttendanceAsync(id, attendanceDomin);
+            if (attendanceDomin == null)
+            {
+                return BadRequest("Attendance record not found.");
+            }
+            AttendanceDto attendanceDto = new AttendanceDto()
+            {
+                Id = attendanceDomin.Id,
+                Date = attendanceDomin.Date,
+                Employee = attendanceDomin.Employee,
+                IsAbsent = attendanceDomin.IsAbsent,
+                WorkingHours = attendanceDomin.WorkingHours,
+                CheckInTime = attendanceDomin.CheckInTime,
+                CheckOutTime = attendanceDomin.CheckOutTime
+            };
+            return Ok(attendanceDto);
+        }
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteAttendance([FromRoute] int id)
+        {
+            Attendance attendanceDomin = await attendanceRepository.DeleteAttendanceAsync(id);
+            if (attendanceDomin == null)
+            {
+                return BadRequest("Attendance record not found.");
+            }
+            AttendanceDto attendanceDto = new AttendanceDto()
+            {
+                Id = attendanceDomin.Id,
+                Date = attendanceDomin.Date,
+                Employee = attendanceDomin.Employee,
+                IsAbsent = attendanceDomin.IsAbsent,
+                WorkingHours = attendanceDomin.WorkingHours,
+                CheckInTime = attendanceDomin.CheckInTime,
+                CheckOutTime = attendanceDomin.CheckOutTime
+            };
+            return Ok(attendanceDto);
         }
     }
 }
