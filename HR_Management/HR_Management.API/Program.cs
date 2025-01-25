@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IEmployeeRepository,SQLEmployeeRepository>();
 builder.Services.AddScoped<IAttendanceRepository,SQLAttendanceRepository>();
+builder.Services.AddScoped<ILeaveRepository,SQLLeaveRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
