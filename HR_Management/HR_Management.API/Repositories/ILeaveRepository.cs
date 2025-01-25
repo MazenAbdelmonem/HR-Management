@@ -6,8 +6,8 @@ namespace HR_Management.API.Repositories
     {
         Task<Leave> CreatLeaveAsync(Leave leave);
         Task<Leave>? GetLeaveByIdAsync(int id);
-        Task<Leave> GetAllAsync();
-        Task<Leave>? GUpdateLeaveAsync(int id, Leave leave);
+        Task<List<Leave>> GetAllAsync();
+        Task<Leave>? UpdateLeaveAsync(int id, Leave leave);
         Task<Leave>? DeleteLeaveAsync(int id);
     }
 }
