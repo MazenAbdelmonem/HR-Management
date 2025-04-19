@@ -4,8 +4,14 @@
     {
         public int employeeId { get; set; }
         public string Name { get; set; } // Employee Name
-        public string Role { get; set; }   // Job Title
+        public string Email { get; set; }
+        public string Role { get; set; } // Admin, HR, Manager, Employee
+
+        public int? ManagerId { get; set; }  // Nullable
         public string Department { get; set; }  
         public DateTime DateOfJoining { get; set; }  //  Joining Date
+
+        public Employee Manager { get; set; }
+        public ICollection<Employee> TeamMembers { get; set; }
     }
 }
