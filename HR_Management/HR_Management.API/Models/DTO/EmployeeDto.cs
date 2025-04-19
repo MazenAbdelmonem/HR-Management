@@ -4,7 +4,8 @@
     {
         public int employeeId { get; set; }
         public string Name { get; set; } // Employee Name
-        public string Role { get; set; }   // Job Title
+        public string Role { get; set; } // Admin, HR, Manager, Employee
+
         public string Department { get; set; }
         public DateTime DateOfJoining { get; set; }
     }

@@ -3,7 +3,9 @@
     public class AddEmployeeRequestDto
     {
         public string Name { get; set; } // Employee Name
-        public string Role { get; set; }   // Job Title
+        public string Role { get; set; } // Admin, HR, Manager, Employee
+
+        public int? ManagerId { get; set; }  // Nullable
         public string Department { get; set; }
     }
 }
