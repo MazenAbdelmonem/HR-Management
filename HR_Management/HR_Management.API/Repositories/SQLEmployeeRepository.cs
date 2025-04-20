@@ -13,8 +13,23 @@ namespace HR_Management.API.Repositories
             this.dbContext = dbContext;
         }
        
-        public async Task<Employee> AddEmployee(Employee employee)
+        public async Task<dynamic> AddEmployee(Employee employee)
         {
+            // تحقق من وجود المدير
+            if (employee.ManagerId != null)
+            {
+                var manager = await dbContext.Employees.FindAsync(employee.ManagerId);
+
+                if (manager == null)
+                {
+                    return "Manager not found.";
+                }
+
+                if (manager.Role != "Manager")
+                {
+                    return "Assigned ManagerId does not belong to a Manager.";
+                }
+            }
             await dbContext.AddAsync(employee);
             await dbContext.SaveChangesAsync();
             return employee;
@@ -29,6 +44,7 @@ namespace HR_Management.API.Repositories
             existingEmployee.Name = employee.Name;
             existingEmployee.Department = employee.Department;
             existingEmployee.Role = employee.Role;
+            existingEmployee.ManagerId = employee.ManagerId;
             await dbContext.SaveChangesAsync();
             return existingEmployee;
         }
@@ -71,5 +87,41 @@ namespace HR_Management.API.Repositories
             return await employee.ToListAsync();
 
         }
+
+
+
+
+
+
+
+        public async Task<dynamic?> GetTeamByManager(int managerId)
+        {
+            var manager = await dbContext.Employees.FindAsync(managerId);
+            if (manager == null)
+            {
+                return "Manager not found.";
+            }
+
+            if (manager.Role != "Manager")
+            {
+                return "Assigned ManagerId does not belong to a Manager.";
+            }
+            var employees =  dbContext.Employees.AsQueryable();
+            employees = employees.Where(x=> x.ManagerId == managerId);
+            return  await employees.ToListAsync();
+        }
+
+        public async Task<List<Employee>?> GetTeamByDepartment(string Department)
+        {
+            var employees = dbContext.Employees.AsQueryable();
+            if (string.IsNullOrWhiteSpace(Department) == false)
+            {
+
+                employees = employees.Where(x => x.Department.Contains(Department));
+
+            }
+            return await employees.ToListAsync();
+        }
+
     }
 }
