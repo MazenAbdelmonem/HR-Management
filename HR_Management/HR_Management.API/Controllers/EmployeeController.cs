@@ -23,6 +23,7 @@ namespace HR_Management.API.Controllers
             {
                 Role = EmployeeRequestDto.Role,
                 DateOfJoining = DateTime.Now,
+                ManagerId = EmployeeRequestDto.ManagerId,
                 Name = EmployeeRequestDto.Name,
                 Department = EmployeeRequestDto.Department,
             };
@@ -31,6 +32,7 @@ namespace HR_Management.API.Controllers
             {
                 employeeId = employeeDomin.employeeId,
                 Name = employeeDomin.Name,
+                ManagerId = employeeDomin.ManagerId,
                 Department = employeeDomin.Department,
                 DateOfJoining = employeeDomin.DateOfJoining,
                 Role = employeeDomin.Role,
@@ -50,6 +52,7 @@ namespace HR_Management.API.Controllers
                     Name = employee.Name,
                     Department = employee.Department,
                     Role = employee.Role,
+                    ManagerId= employee.ManagerId,
                     DateOfJoining = employee.DateOfJoining
                 };
                 EmployeesDto.Add(employeeDto);
@@ -85,7 +88,8 @@ namespace HR_Management.API.Controllers
             {
                 Name = updateEmployeeRequestDto.Name,
                 Department = updateEmployeeRequestDto.Department,
-                Role = updateEmployeeRequestDto.Role
+                Role = updateEmployeeRequestDto.Role,
+                ManagerId = updateEmployeeRequestDto.ManagerId
             };
             employeeDmoin = await employeeRepository.UpdateEmployee(id, employeeDmoin);
             if (employeeDmoin == null)
@@ -98,6 +102,7 @@ namespace HR_Management.API.Controllers
                 Name = employeeDmoin.Name,
                 Department = employeeDmoin.Department,
                 Role = employeeDmoin.Role,
+                ManagerId = employeeDmoin.ManagerId,
                 DateOfJoining = employeeDmoin.DateOfJoining
             };
             return Ok(employeeDto);
@@ -117,6 +122,7 @@ namespace HR_Management.API.Controllers
                 Name = employee.Name,
                 Department = employee.Department,
                 Role = employee.Role,
+                ManagerId = employee.ManagerId,
                 DateOfJoining = employee.DateOfJoining
             };
             return Ok(employeeDto);
@@ -135,6 +141,54 @@ namespace HR_Management.API.Controllers
                     Name = employee.Name,
                     Department = employee.Department,
                     Role = employee.Role,
+                    ManagerId = employee.ManagerId,
+                    DateOfJoining = employee.DateOfJoining
+                };
+                employeesDto.Add(employeeDto);
+            }
+            return Ok(employeesDto);
+        }
+        [HttpGet]
+        [Route("{ManagerId}")]
+        public async Task<IActionResult> GetTeamByManager([FromQuery] int ManagerId)
+        {
+            var employeesDomin = await employeeRepository.GetTeamByManager(ManagerId);
+            if (employeesDomin.GetType() == typeof(string))
+            {
+                var employeeDto = employeesDomin;
+                return Ok(employeeDto);
+            }
+            List<EmployeeDto> employeesDto = new List<EmployeeDto>();
+            foreach (Employee employee in employeesDomin)
+            {
+                EmployeeDto employeeDto = new EmployeeDto()
+                {
+                    employeeId = employee.employeeId,
+                    Name = employee.Name,
+                    Department = employee.Department,
+                    Role = employee.Role,
+                    ManagerId = employee.ManagerId,
+                    DateOfJoining = employee.DateOfJoining
+                };
+                employeesDto.Add(employeeDto);
+            }
+            return Ok(employeesDto);
+        }
+        [HttpGet]
+        [Route("{Department}")]
+        public async Task<IActionResult> GetTeamByDepartment([FromQuery] string Department)
+        {
+            var employeesDomin = await employeeRepository.GetTeamByDepartment(Department);
+            List<EmployeeDto> employeesDto = new List<EmployeeDto>();
+            foreach (Employee employee in employeesDomin)
+            {
+                EmployeeDto employeeDto = new EmployeeDto()
+                {
+                    employeeId = employee.employeeId,
+                    Name = employee.Name,
+                    Department = employee.Department,
+                    Role = employee.Role,
+                    ManagerId = employee.ManagerId,
                     DateOfJoining = employee.DateOfJoining
                 };
                 employeesDto.Add(employeeDto);
