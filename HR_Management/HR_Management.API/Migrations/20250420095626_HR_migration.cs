@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HR_Management.API.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class HR_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,26 +18,20 @@ namespace HR_Management.API.Migrations
                     employeeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ManagerId = table.Column<int>(type: "int", nullable: true),
                     Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOfJoining = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.employeeId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_Employees_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Employees",
+                        principalColumn: "employeeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -87,39 +81,15 @@ namespace HR_Management.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "EmployeeRoles",
-                columns: table => new
-                {
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeRoles", x => new { x.EmployeeId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_EmployeeRoles_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "employeeId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EmployeeRoles_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_EmployeeId",
                 table: "Attendances",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeRoles_RoleId",
-                table: "EmployeeRoles",
-                column: "RoleId");
+                name: "IX_Employees_ManagerId",
+                table: "Employees",
+                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leaves_EmployeeId",
@@ -134,13 +104,7 @@ namespace HR_Management.API.Migrations
                 name: "Attendances");
 
             migrationBuilder.DropTable(
-                name: "EmployeeRoles");
-
-            migrationBuilder.DropTable(
                 name: "Leaves");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Employees");

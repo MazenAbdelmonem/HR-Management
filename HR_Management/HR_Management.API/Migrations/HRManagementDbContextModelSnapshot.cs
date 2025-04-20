@@ -70,6 +70,13 @@ namespace HR_Management.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -80,22 +87,9 @@ namespace HR_Management.API.Migrations
 
                     b.HasKey("employeeId");
 
+                    b.HasIndex("ManagerId");
+
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("HR_Management.API.Models.Domin.EmployeeRole", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeeId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("EmployeeRoles");
                 });
 
             modelBuilder.Entity("HR_Management.API.Models.Domin.Leave", b =>
@@ -130,23 +124,6 @@ namespace HR_Management.API.Migrations
                     b.ToTable("Leaves");
                 });
 
-            modelBuilder.Entity("HR_Management.API.Models.Domin.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("HR_Management.API.Models.Domin.Attendance", b =>
                 {
                     b.HasOne("HR_Management.API.Models.Domin.Employee", "Employee")
@@ -158,23 +135,13 @@ namespace HR_Management.API.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HR_Management.API.Models.Domin.EmployeeRole", b =>
+            modelBuilder.Entity("HR_Management.API.Models.Domin.Employee", b =>
                 {
-                    b.HasOne("HR_Management.API.Models.Domin.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("HR_Management.API.Models.Domin.Employee", "Manager")
+                        .WithMany("TeamMembers")
+                        .HasForeignKey("ManagerId");
 
-                    b.HasOne("HR_Management.API.Models.Domin.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Role");
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("HR_Management.API.Models.Domin.Leave", b =>
@@ -186,6 +153,11 @@ namespace HR_Management.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HR_Management.API.Models.Domin.Employee", b =>
+                {
+                    b.Navigation("TeamMembers");
                 });
 #pragma warning restore 612, 618
         }

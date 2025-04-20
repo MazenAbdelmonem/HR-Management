@@ -13,13 +13,7 @@ namespace HR_Management.API.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Leave> Leaves { get; set; }
-        public DbSet<EmployeeRole> EmployeeRoles { get; set; }
-        public DbSet<Role> Roles { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<EmployeeRole>().HasKey(er => new { er.EmployeeId  , er.RoleId });
-        }
+        
 
     }
 }
