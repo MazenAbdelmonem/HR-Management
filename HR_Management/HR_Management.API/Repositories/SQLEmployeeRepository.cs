@@ -69,10 +69,7 @@ namespace HR_Management.API.Repositories
         public async Task<Employee> GetById(int id)
         {
             Employee employee = await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == id);
-            if(employee == null)
-            {
-                return null;
-            }
+            
             return employee;
         }
         public async Task<List<Employee>> SearchByName(string? name)

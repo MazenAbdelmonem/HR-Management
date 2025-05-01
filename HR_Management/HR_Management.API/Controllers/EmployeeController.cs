@@ -19,23 +19,30 @@ namespace HR_Management.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEmployee([FromBody] AddEmployeeRequestDto EmployeeRequestDto)
         {
-            Employee employeeDomin = new Employee()
+            dynamic employeeDomin = new Employee()
             {
                 Role = EmployeeRequestDto.Role,
                 DateOfJoining = DateTime.Now,
                 ManagerId = EmployeeRequestDto.ManagerId,
                 Name = EmployeeRequestDto.Name,
+                Email = EmployeeRequestDto.Email,
                 Department = EmployeeRequestDto.Department,
             };
-            employeeDomin = await  employeeRepository.AddEmployee(employeeDomin);
+            var employeeDomin1 = await  employeeRepository.AddEmployee(employeeDomin);
+            if(employeeDomin1 is string)
+            {
+                var x = employeeDomin1;
+                return Ok(x);
+            }
             EmployeeDto employeeDto = new EmployeeDto()
             {
-                employeeId = employeeDomin.employeeId,
-                Name = employeeDomin.Name,
-                ManagerId = employeeDomin.ManagerId,
-                Department = employeeDomin.Department,
-                DateOfJoining = employeeDomin.DateOfJoining,
-                Role = employeeDomin.Role,
+                employeeId = employeeDomin1.employeeId,
+                Name = employeeDomin1.Name,
+                Email = employeeDomin1.Email,
+                ManagerId = employeeDomin1.ManagerId,
+                Department = employeeDomin1.Department,
+                DateOfJoining = employeeDomin1.DateOfJoining,
+                Role = employeeDomin1.Role,
             };
             return Ok(employeeDto);
         }
@@ -60,8 +67,8 @@ namespace HR_Management.API.Controllers
             return Ok(EmployeesDto);
         }
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GitById([FromRoute] int id)
+        [Route("by-id/{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             Employee employeeDomin  = await employeeRepository.GetById(id);
             if (employeeDomin == null)
@@ -74,6 +81,7 @@ namespace HR_Management.API.Controllers
                 employeeId = employeeDomin.employeeId,
                 Name = employeeDomin.Name,
                 Department = employeeDomin.Department,
+                ManagerId = employeeDomin.ManagerId,
                 Role = employeeDomin.Role,
                 DateOfJoining = employeeDomin.DateOfJoining
             };
@@ -88,6 +96,7 @@ namespace HR_Management.API.Controllers
             {
                 Name = updateEmployeeRequestDto.Name,
                 Department = updateEmployeeRequestDto.Department,
+                Email = updateEmployeeRequestDto.Email,
                 Role = updateEmployeeRequestDto.Role,
                 ManagerId = updateEmployeeRequestDto.ManagerId
             };
@@ -149,8 +158,8 @@ namespace HR_Management.API.Controllers
             return Ok(employeesDto);
         }
         [HttpGet]
-        [Route("{ManagerId}")]
-        public async Task<IActionResult> GetTeamByManager([FromQuery] int ManagerId)
+        [Route("by-manager/{ManagerId}")]
+        public async Task<IActionResult> GetTeamByManager([FromRoute] int ManagerId)
         {
             var employeesDomin = await employeeRepository.GetTeamByManager(ManagerId);
             if (employeesDomin.GetType() == typeof(string))
@@ -175,8 +184,8 @@ namespace HR_Management.API.Controllers
             return Ok(employeesDto);
         }
         [HttpGet]
-        [Route("{Department}")]
-        public async Task<IActionResult> GetTeamByDepartment([FromQuery] string Department)
+        [Route("by-department/{Department}")]
+        public async Task<IActionResult> GetTeamByDepartment([FromRoute] string Department)
         {
             var employeesDomin = await employeeRepository.GetTeamByDepartment(Department);
             List<EmployeeDto> employeesDto = new List<EmployeeDto>();
