@@ -100,19 +100,23 @@ namespace HR_Management.API.Controllers
                 Role = updateEmployeeRequestDto.Role,
                 ManagerId = updateEmployeeRequestDto.ManagerId
             };
-            employeeDmoin = await employeeRepository.UpdateEmployee(id, employeeDmoin);
-            if (employeeDmoin == null)
+            dynamic employeeDmoin1 = await employeeRepository.UpdateEmployee(id, employeeDmoin);
+            if (employeeDmoin1 == null)
             {
                 return BadRequest("Not found");
             }
+            if(employeeDmoin1.GetType() == typeof(string))
+            {
+                return BadRequest(employeeDmoin1);
+            }
             EmployeeDto employeeDto = new EmployeeDto()
             {
-                employeeId = employeeDmoin.employeeId,
-                Name = employeeDmoin.Name,
-                Department = employeeDmoin.Department,
-                Role = employeeDmoin.Role,
-                ManagerId = employeeDmoin.ManagerId,
-                DateOfJoining = employeeDmoin.DateOfJoining
+                employeeId = employeeDmoin1.employeeId,
+                Name = employeeDmoin1.Name,
+                Department = employeeDmoin1.Department,
+                Role = employeeDmoin1.Role,
+                ManagerId = employeeDmoin1.ManagerId,
+                DateOfJoining = employeeDmoin1.DateOfJoining
             };
             return Ok(employeeDto);
         }
@@ -165,7 +169,7 @@ namespace HR_Management.API.Controllers
             if (employeesDomin.GetType() == typeof(string))
             {
                 var employeeDto = employeesDomin;
-                return Ok(employeeDto);
+                return BadRequest(employeeDto);
             }
             List<EmployeeDto> employeesDto = new List<EmployeeDto>();
             foreach (Employee employee in employeesDomin)

@@ -5,7 +5,7 @@ namespace HR_Management.API.Repositories
     public interface IEmployeeRepository
     {
         Task<dynamic> AddEmployee(Employee employee);
-        Task<Employee?> UpdateEmployee(int id, Employee employee);
+        Task<dynamic?> UpdateEmployee(int id, Employee employee);
         Task<Employee?> DeleteEmployee(int id);
         Task<dynamic?> GetTeamByManager(int managerId);
         Task<List<Employee>?> GetTeamByDepartment(string Department);

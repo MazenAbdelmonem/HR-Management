@@ -34,12 +34,27 @@ namespace HR_Management.API.Repositories
             await dbContext.SaveChangesAsync();
             return employee;
         }
-        public async Task<Employee?> UpdateEmployee(int id, Employee employee)
+        public async Task<dynamic?> UpdateEmployee(int id, Employee employee)
         {
             Employee existingEmployee = await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == id);
             if (existingEmployee == null)
             {
                 return null;
+            }
+            // تحقق من وجود المدير
+            if (employee.ManagerId != null)
+            {
+                var manager = await dbContext.Employees.FindAsync(employee.ManagerId);
+
+                if (manager == null)
+                {
+                    return "Manager not found.";
+                }
+
+                if (manager.Role != "Manager")
+                {
+                    return "Assigned ManagerId does not belong to a Manager.";
+                }
             }
             existingEmployee.Name = employee.Name;
             existingEmployee.Department = employee.Department;
