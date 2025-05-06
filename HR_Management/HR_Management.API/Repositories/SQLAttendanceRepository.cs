@@ -12,14 +12,18 @@ namespace HR_Management.API.Repositories
         {
             this.dbContext = dbContext;
         }
-        public async Task<Attendance> CreatAttendanceAsync(Attendance attendance)
+        public async Task<Attendance?> CreatAttendanceAsync(Attendance attendance)
         {
+            if(await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == attendance.EmployeeId) == null)
+            {
+                return null;
+            }
             await dbContext.AddAsync(attendance);
             await dbContext.SaveChangesAsync();
             return attendance;
         }
 
-        public async Task<Attendance>? DeleteAttendanceAsync(int id)
+        public async Task<Attendance?> DeleteAttendanceAsync(int id)
         {
             Attendance attendance = await dbContext.Attendances.Include(a => a.Employee).FirstOrDefaultAsync(x => x.Id == id);
             if (attendance == null)
@@ -38,19 +42,26 @@ namespace HR_Management.API.Repositories
             return attendances;
         }
 
-        public async Task<Attendance>? GitByIdAsync(int id)
+        public async Task<Attendance?> GitByIdAsync(int id)
         {
-            Attendance attendance = await dbContext.Attendances.FirstOrDefaultAsync(x => x.Id == id);
+            Attendance attendance = await dbContext.Attendances.Include(x => x.Employee).FirstOrDefaultAsync(x => x.Id == id);
             return attendance;
         }
 
-        public async Task<Attendance>? UpdateAttendanceAsync(int id, Attendance attendance)
+        public async Task<dynamic?> UpdateAttendanceAsync(int id, Attendance attendance)
         {
-            Attendance existingattendance = await dbContext.Attendances.FirstOrDefaultAsync(x => x.Id == id);
+
+            Attendance existingattendance = await dbContext.Attendances.Include(x => x.Employee).FirstOrDefaultAsync(x => x.Id == id);
             if (existingattendance == null)
             {
                 return existingattendance;
             }
+            if (await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == attendance.EmployeeId) == null)
+            {
+                return "Employee Not Found";
+            }
+
+            
             existingattendance.EmployeeId  = attendance.EmployeeId;
             existingattendance.WorkingHours = attendance.WorkingHours;
             existingattendance.IsAbsent = attendance.IsAbsent;

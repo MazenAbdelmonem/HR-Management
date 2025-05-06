@@ -28,6 +28,10 @@ namespace HR_Management.API.Controllers
                 Status = addLeaveRequestDto.Status
             };
             leaveDomin = await leaveRepository.CreatLeaveAsync(leaveDomin);
+            if (leaveDomin == null)
+            {
+                return BadRequest("Employee Not Found");
+            }
             LeaveDto leaveDto = new LeaveDto()
             {
                 Id = leaveDomin.Id,
@@ -86,7 +90,7 @@ namespace HR_Management.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateLeave([FromRoute] int id, [FromBody] UpdateLeaveReqeustDto updateLeaveReqeustDto)
         {
-            Leave leaveDomin = new Leave()
+            Leave leaveDomin1 = new Leave()
             {
                 EmployeeId = updateLeaveReqeustDto.EmployeeId,
                 LeaveType = updateLeaveReqeustDto.LeaveType,
@@ -94,10 +98,14 @@ namespace HR_Management.API.Controllers
                 EndDate = updateLeaveReqeustDto.EndDate,
                 Status = updateLeaveReqeustDto.Status
             };
-            leaveDomin = await leaveRepository.UpdateLeaveAsync(id, leaveDomin);
+            var leaveDomin = await leaveRepository.UpdateLeaveAsync(id, leaveDomin1);
             if (leaveDomin == null)
             {
                 return BadRequest("Leave record not found.");
+            }
+            if(leaveDomin is string)
+            {
+                return BadRequest(leaveDomin);
             }
             LeaveDto leavingDto = new LeaveDto()
             {

@@ -38,6 +38,10 @@ namespace HR_Management.API.Controllers
             }
 
             attendanceDomin = await attendanceRepository.CreatAttendanceAsync(attendanceDomin);
+            if(attendanceDomin == null)
+            {
+                return BadRequest("Employee Not Found");
+            }
 
             AttendanceDto attendanceDto = new AttendanceDto()
             {
@@ -97,7 +101,7 @@ namespace HR_Management.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateAttendance([FromRoute] int id, [FromBody] UpdateAttendanceReqeustDto updateAttendanceReqeustDto)
         {
-            Attendance attendanceDomin = new Attendance()
+            var attendanceDomin = new Attendance()
             {
                 EmployeeId = updateAttendanceReqeustDto.EmployeeId,
                 IsAbsent = updateAttendanceReqeustDto.IsAbsent,
@@ -106,20 +110,26 @@ namespace HR_Management.API.Controllers
                 CheckOutTime = updateAttendanceReqeustDto.CheckOutTime,
                 Date = DateTime.UtcNow
             };
-            attendanceDomin = await attendanceRepository.UpdateAttendanceAsync(id, attendanceDomin);
-            if (attendanceDomin == null)
+            var attendanceDomin1 = await attendanceRepository.UpdateAttendanceAsync(id, attendanceDomin);
+            if (attendanceDomin1 == null)
             {
                 return BadRequest("Attendance record not found.");
             }
+
+            if (attendanceDomin1 is string)
+            {
+                var x = attendanceDomin1;
+                return Ok(x);
+            }
             AttendanceDto attendanceDto = new AttendanceDto()
             {
-                Id = attendanceDomin.Id,
-                Date = attendanceDomin.Date,
-                Employee = attendanceDomin.Employee,
-                IsAbsent = attendanceDomin.IsAbsent,
-                WorkingHours = attendanceDomin.WorkingHours,
-                CheckInTime = attendanceDomin.CheckInTime,
-                CheckOutTime = attendanceDomin.CheckOutTime
+                Id = attendanceDomin1.Id,
+                Date = attendanceDomin1.Date,
+                Employee = attendanceDomin1.Employee,
+                IsAbsent = attendanceDomin1.IsAbsent,
+                WorkingHours = attendanceDomin1.WorkingHours,
+                CheckInTime = attendanceDomin1.CheckInTime,
+                CheckOutTime = attendanceDomin1.CheckOutTime
             };
             return Ok(attendanceDto);
         }

@@ -12,8 +12,12 @@ namespace HR_Management.API.Repositories
         {
             this.dbContext = dbContext;
         }
-        public async Task<Leave> CreatLeaveAsync(Leave leave)
+        public async Task<Leave?> CreatLeaveAsync(Leave leave)
         {
+            if (await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == leave.EmployeeId) == null)
+            {
+                return null;
+            }
             await dbContext.Leaves.AddAsync(leave);
             await dbContext.SaveChangesAsync();
             return leave;
@@ -25,19 +29,24 @@ namespace HR_Management.API.Repositories
             
         }
 
-        public async Task<Leave>? GetLeaveByIdAsync(int id)
+        public async Task<Leave?> GetLeaveByIdAsync(int id)
         {
-            Leave leave = await dbContext.Leaves.FirstOrDefaultAsync(a => a.Id == id);
+            Leave leave = await dbContext.Leaves.Include(x => x.Employee).FirstOrDefaultAsync(a => a.Id == id);
             return leave;
         }
 
-        public async Task<Leave>? UpdateLeaveAsync(int id, Leave leave)
+        public async Task<dynamic?> UpdateLeaveAsync(int id, Leave leave)
         {
-            Leave existingleave = await dbContext.Leaves.FirstOrDefaultAsync(a => a.Id == id);
-            if (existingleave != null)
+            Leave existingleave = await dbContext.Leaves.Include(x => x.Employee).FirstOrDefaultAsync(a => a.Id == id);
+            if (existingleave == null)
             {
                 return existingleave;
             }
+            if (await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == leave.EmployeeId) == null)
+            {
+                return "Employee Not Found";
+            }
+
             existingleave.StartDate = leave.StartDate;
             existingleave.EndDate = leave.EndDate;
             existingleave.Status = leave.Status;
