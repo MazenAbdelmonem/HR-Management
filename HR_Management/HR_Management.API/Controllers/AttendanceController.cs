@@ -154,5 +154,32 @@ namespace HR_Management.API.Controllers
             };
             return Ok(attendanceDto);
         }
+        [HttpGet]
+        [Route("GitByEmployee/{id}")]
+        public async Task<IActionResult> GitByEmployee([FromRoute]int id)
+        {
+            List<Attendance> attendancesDomin = await attendanceRepository.GetAttendanceByEmployeeId(id);
+            if(attendancesDomin == null)
+            {
+                return BadRequest("Employee Not Found");
+            }
+
+            List<AttendanceDto> attendancesDto = new List<AttendanceDto>();
+            foreach (Attendance attendanceDomin in attendancesDomin)
+            {
+                AttendanceDto attendanceDto = new AttendanceDto()
+                {
+                    Id = attendanceDomin.Id,
+                    Date = attendanceDomin.Date,
+                    Employee = attendanceDomin.Employee,
+                    CheckInTime = attendanceDomin.CheckInTime,
+                    CheckOutTime = attendanceDomin.CheckOutTime,
+                    WorkingHours = attendanceDomin.WorkingHours,
+                    IsAbsent = attendanceDomin.IsAbsent
+                };
+                attendancesDto.Add(attendanceDto);
+            }
+            return Ok(attendancesDto);
+        }
     }
 }

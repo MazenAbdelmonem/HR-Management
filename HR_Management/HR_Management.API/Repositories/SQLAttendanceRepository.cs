@@ -71,5 +71,18 @@ namespace HR_Management.API.Repositories
             return existingattendance;
 
         }
+        public async Task<List<Attendance>?> GetAttendanceByEmployeeId(int id)
+        {
+            Employee employee = await dbContext.Employees.FirstOrDefaultAsync(x=>x.employeeId==id);
+            if (employee == null)
+            {
+                return null;
+            }
+            List<Attendance> attendances = await dbContext.Attendances
+            .Include(a => a.Employee)
+            .Where(x => x.EmployeeId == id)
+            .ToListAsync();
+            return attendances;
+        }
     }
 }

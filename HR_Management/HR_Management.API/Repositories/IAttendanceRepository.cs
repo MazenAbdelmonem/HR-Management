@@ -9,5 +9,6 @@ namespace HR_Management.API.Repositories
         Task<Attendance?> GitByIdAsync(int id);
         Task<dynamic?> UpdateAttendanceAsync(int id, Attendance attendance);
         Task<Attendance?> DeleteAttendanceAsync(int id);
+        Task<List<Attendance>?> GetAttendanceByEmployeeId(int id);
     }
 }
