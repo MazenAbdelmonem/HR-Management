@@ -155,8 +155,8 @@ namespace HR_Management.API.Controllers
             return Ok(attendanceDto);
         }
         [HttpGet]
-        [Route("GitByEmployee/{id}")]
-        public async Task<IActionResult> GitByEmployee([FromRoute]int id)
+        [Route("GitAttendanceByEmployee/{id}")]
+        public async Task<IActionResult> GitAttendanceByEmployee([FromRoute]int id)
         {
             List<Attendance> attendancesDomin = await attendanceRepository.GetAttendanceByEmployeeId(id);
             if(attendancesDomin == null)
