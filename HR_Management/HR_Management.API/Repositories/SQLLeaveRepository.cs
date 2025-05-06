@@ -54,7 +54,7 @@ namespace HR_Management.API.Repositories
             existingleave.LeaveType = leave.LeaveType;
             return existingleave;
         }
-        public async Task<Leave>? DeleteLeaveAsync(int id)
+        public async Task<Leave?> DeleteLeaveAsync(int id)
         {
             Leave leave = await dbContext.Leaves.FirstOrDefaultAsync(a => a.Id == id);
             if (leave == null)
@@ -65,6 +65,18 @@ namespace HR_Management.API.Repositories
             await dbContext.SaveChangesAsync();
             return leave;
 
+        }
+        public async Task<List<Leave>?> GetLeaveByEmployeeId(int id)
+        {
+            Employee employee = await dbContext.Employees.FirstOrDefaultAsync(x => x.employeeId == id);
+            if (employee == null)
+            {
+                return null;
+            }
+            List<Leave> leaves = await dbContext.Leaves.Include(a => a.Employee)
+            .Where(x => x.EmployeeId == id)
+            .ToListAsync();
+            return leaves;
         }
     }
 }

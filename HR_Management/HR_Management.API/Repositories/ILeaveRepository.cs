@@ -9,5 +9,7 @@ namespace HR_Management.API.Repositories
         Task<List<Leave>> GetAllAsync();
         Task<dynamic?> UpdateLeaveAsync(int id, Leave leave);
         Task<Leave?> DeleteLeaveAsync(int id);
+
+        Task<List<Leave>?> GetLeaveByEmployeeId(int id);
     }
 }

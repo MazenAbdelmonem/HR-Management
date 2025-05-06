@@ -140,5 +140,32 @@ namespace HR_Management.API.Controllers
             };
             return Ok(leavingDto);
         }
+        [HttpGet]
+        [Route("GitLeaveByEmployee/{id}")]
+        public async Task<IActionResult> GitleaveByEmployee([FromRoute] int id)
+        {
+            List<Leave> leavesDomin= await leaveRepository.GetLeaveByEmployeeId(id);
+            if (leavesDomin == null)
+            {
+                return BadRequest("Employee Not Found");
+            }
+
+            List<LeaveDto> leavesDto = new List<LeaveDto>();
+            foreach (Leave leaveDomin in leavesDomin)
+            {
+                LeaveDto leaveDto = new LeaveDto()
+                {
+                    Id = leaveDomin.Id,
+                    EmployeeId = leaveDomin.EmployeeId,
+                    LeaveType = leaveDomin.LeaveType,
+                    StartDate = leaveDomin.StartDate,
+                    EndDate = leaveDomin.EndDate,
+                    Employee = leaveDomin.Employee,
+                    Status = leaveDomin.Status
+                };
+                leavesDto.Add(leaveDto);
+            }
+            return Ok(leavesDto);
+        }
     }
 }
